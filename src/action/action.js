@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const NEWSDATA_SUCCESS = "NEWSDATA_SUCCESS";
 export const NEWSDATA_FAILURE = "NEWSDATA_FAILURE";
 export const NEWSDATA_PROGRESS = "NEWSDATA_PROGRESS";
@@ -19,11 +21,17 @@ export const newsDataFailure = error => ({
 export function getData(endPoint) {
   return dispatch => {
     dispatch(newsDataBegin());
-    fetch(endPoint)
-      .then(result => result.json())
-      .then(result => {
-        dispatch(newsDataSuccess(result.articles));
-      })
-      .catch(error => dispatch(newsDataFailure(error)));
+    // fetch(endPoint)
+    //   .then(result => result.json())
+    //   .then(result => {
+    //     dispatch(newsDataSuccess(result.articles));
+    //   })
+    //   .catch(error => dispatch(newsDataFailure(error)));
+    axios.get(endPoint)
+                .then((res) => {
+                  dispatch(newsDataSuccess(res.data.articles));
+                }).catch((e) => {
+                  dispatch(newsDataFailure(e));
+                });
   };
 }
