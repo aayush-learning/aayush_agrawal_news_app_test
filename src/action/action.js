@@ -1,14 +1,29 @@
-export const NEWSDATA = "NEWSDATA";
+export const NEWSDATA_SUCCESS = "NEWSDATA_SUCCESS";
+export const NEWSDATA_FAILURE = "NEWSDATA_FAILURE";
+export const NEWSDATA_PROGRESS = "NEWSDATA_PROGRESS";
+
+export const newsDataBegin = () => ({
+  type: NEWSDATA_PROGRESS
+});
+
+export const newsDataSuccess = news => ({
+  type: NEWSDATA_SUCCESS,
+  data:  news 
+});
+
+export const newsDataFailure = error => ({
+  type: NEWSDATA_FAILURE,
+  data: { error }
+});
 
 export function getData(endPoint) {
   return dispatch => {
+    dispatch(newsDataBegin());
     fetch(endPoint)
       .then(result => result.json())
       .then(result => {
-        dispatch ({
-          type: NEWSDATA,
-          data: result.articles
-        });
-      });
+        dispatch(newsDataSuccess(result.articles));
+      })
+      .catch(error => dispatch(newsDataFailure(error)));
   };
 }

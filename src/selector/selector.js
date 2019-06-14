@@ -47,5 +47,10 @@ const isLoadingSelector = () =>
     [selectorState],
     news => immutableToJS(news.get("isLoading"))
   );
+const errorSelector = () =>
+  createSelector(
+    [selectorState],
+    news => immutableToJS(news.get("error"))
+  );
 
-export { newsSelector, isLoadingSelector };
+export { newsSelector, isLoadingSelector, errorSelector };
