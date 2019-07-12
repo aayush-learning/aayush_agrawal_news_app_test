@@ -6,15 +6,17 @@ import thunk from 'redux-thunk';
 import reducer from '../src/reducer/reducer';
 import Detail from "./detail/Detail";
 import Home from "./home/Home";
-
+import OnlineScreen from './app/OnlineScreen';
+import OfflineScreen from './app/OfflineScreen';
 const AppNavigtor = createAppContainer(
   createStackNavigator({
-    Home: {
-      screen: Home,
-      navigationOptions: { title: "Home" }
+    OnlineScreen: {
+      screen: OnlineScreen,
+      navigationOptions: { title: "OnlineScreen" }
     },
-    Detail: {
-      screen: Detail
+    OfflineScreen: {
+      screen: OfflineScreen,
+      navigationOptions: { title: "OfflineScreen" }
     }
   })
 );
