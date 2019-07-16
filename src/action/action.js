@@ -30,6 +30,7 @@ export function getData(endPoint) {
     axios.get(endPoint)
                 .then((res) => {
                   dispatch(newsDataSuccess(res.data.articles));
+                  console.log("success call back called")
                 }).catch((e) => {
                   dispatch(newsDataFailure(e));
                 });
