@@ -16,6 +16,56 @@ class OfflineScreen extends Component {
       isConnected: false
     }
   }
+  setName = async (name) => {
+    try {
+      await AsyncStorage.setItem('name', name);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "setting name");
+    }
+  };
+  setEmail = async (email) => {
+    try {
+      await AsyncStorage.setItem('email', email);
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "setting email");
+    }
+  };
+  getName = async () => {
+    try {
+      name = await AsyncStorage.getItem('name') || '';
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "getting name");
+    }
+    return name;
+  }
+  getEmail = async () => {
+    try {
+      email = await AsyncStorage.getItem('email') || '';
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "getting email");
+    }
+    return email;
+  }
+  deleteName = async () => {
+    try {
+      await AsyncStorage.removeItem('name');
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "deleting name");
+    }
+  }
+  deleteEmail = async () => {
+    try {
+      await AsyncStorage.removeItem('email');
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "deleting email");
+    }
+  }
   ShowModalFunction(visible) {
     this.setState({ ModalVisibleStatus: visible });
   }
@@ -26,8 +76,8 @@ class OfflineScreen extends Component {
 
   componentDidMount() {
     // this.getValueFromStorage();
-    AsyncStorage.getItem('name').then((name) => this.setState({ 'name': name }));
-    AsyncStorage.getItem('email').then((email) => this.setState({ 'email': email }));
+    this.getName().then((name) => this.setState({ 'name': name }));
+    this.getEmail().then((email) => this.setState({ 'email': email }));
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
 
@@ -36,24 +86,26 @@ class OfflineScreen extends Component {
   }
 
   handleConnectivityChange = (isConnected) => {
-    const { name, email } = this.state;
-    if (name !== '' && email !== '') {
-      const API_URL =
-        "https://newsapi.org/v2/top-headlines?country=de&category=business&apiKey=";
-      const API_KEY = "9b64bcfe576047ba8e5bb7fd24c9e526";
-      let endPoint = `${API_URL}${API_KEY}`;
-      this.props.getData(endPoint);
-      this.setState({ name: '', email: '' });
-      AsyncStorage.removeItem('name');
-      AsyncStorage.removeItem('email');
-    }
+    // const { name, email } = this.state;
+    // if (name !== '' && email !== '') {
+    //   const API_URL =
+    //     "https://newsapi.org/v2/top-headlines?country=de&category=business&apiKey=";
+    //   const API_KEY = "9b64bcfe576047ba8e5bb7fd24c9e526";
+    //   let endPoint = `${API_URL}${API_KEY}`;
+    //   this.props.getData(endPoint);
+    //   this.setState({ name: '', email: '' });
+    //   // this.deleteName();
+    //   // this.deleteEmail();
+    // }
     this.setState({ isConnected, ModalVisibleStatus: isConnected });
   };
-  setName = (name) => {
+  setNameText = (name) => {
+    // this.setName(name);
     AsyncStorage.setItem('name', name);
     this.setState({ name: name });
   };
-  setEmail = (email) => {
+  setEmailText = (email) => {
+    // this.setEmail(email);
     AsyncStorage.setItem('email', email);
     this.setState({ email: email });
   };
@@ -68,17 +120,25 @@ class OfflineScreen extends Component {
   // };
   saveText = () => {
     const { name, email } = this.state;
-    if (name !== '' && email !== '') {
-      const value1 = this.state.name;
-      const value2 = this.state.email;
-      let keys = [['name', value1], ['email', value2]];
-      AsyncStorage.multiSet(keys, err => {
-        this.setState({
-          name: '',
-          email: '',
-        });
+      // const value1 = this.state.name;
+      // const value2 = this.state.email;
+      // let keys = [['name', value1], ['email', value2]];
+      // AsyncStorage.multiSet(keys, err => {
+      //   this.setState({
+      //     name: '',
+      //     email: '',
+      //   });
+      // });
+      // this.setName(name);
+
+      AsyncStorage.setItem('name', name);
+      // this.setEmail(email);
+
+      AsyncStorage.setItem('email', email);
+      this.setState({
+        name: '',
+        email: ''
       });
-    }
 
   };
 
@@ -118,13 +178,13 @@ class OfflineScreen extends Component {
           <TextInput
             style={styles.textInput}
             placeholder="Enter Name"
-            onChangeText={this.setName}
+            onChangeText={this.setNameText}
             value={this.state.name}
           />
           <TextInput
             style={styles.textInput}
             placeholder="Enter Email"
-            onChangeText={this.setEmail}
+            onChangeText={this.setEmailText}
             value={this.state.email}
           />
           {/* <Text>

@@ -16,7 +16,24 @@ class OnlineScreen extends Component {
       isConnected: true
     }
   }
-
+  getName = async () => {
+    try {
+      name = await AsyncStorage.getItem('name') || '';
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "getting name");
+    }
+    return name;
+  }
+  getEmail = async () => {
+    try {
+      email = await AsyncStorage.getItem('email') || '';
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message, "getting email");
+    }
+    return email;
+  }
   ShowModalFunction(visible) {
     this.setState({ ModalVisibleStatus: visible });
   }
@@ -28,6 +45,8 @@ class OnlineScreen extends Component {
   componentDidMount() {
     AsyncStorage.getItem('name').then((name) => this.setState({ 'name': name }));
     AsyncStorage.getItem('email').then((email) => this.setState({ 'email': email }));
+    // this.getName().then((name) => this.setState({ 'name': name }));
+    // this.getEmail().then((email) => this.setState({ 'email': email }));
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
 
