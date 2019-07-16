@@ -35,7 +35,7 @@ class OnlineScreen extends Component {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
   }
   handleConnectivityChange = isConnected => {
-    this.setState({ isConnected });
+    this.setState({ isConnected, ModalVisibleStatus: !isConnected });
   };
 
   setName = (name) => {
@@ -85,11 +85,12 @@ class OnlineScreen extends Component {
     if (!this.state.isConnected) {
       return (
         <View style={styles.container}>
+          <Text>online</Text>
           <Modal
             transparent={false}
             animationType={"slide"}
             visible={this.state.ModalVisibleStatus}
-            onRequestClose={() => { this.ShowModalFunction(!this.state.ModalVisibleStatus) }} >
+            onRequestClose={() => { }} >
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <View style={styles.ModalInsideView}>
                 <Text style={styles.TextStyle}>Online Would you like to continue, with out internet </Text>

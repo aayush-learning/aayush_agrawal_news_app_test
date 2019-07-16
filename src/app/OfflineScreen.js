@@ -47,7 +47,7 @@ class OfflineScreen extends Component {
       AsyncStorage.removeItem('name');
       AsyncStorage.removeItem('email');
     }
-    this.setState({ isConnected });
+    this.setState({ isConnected, ModalVisibleStatus: isConnected });
   };
   setName = (name) => {
     AsyncStorage.setItem('name', name);
@@ -92,11 +92,12 @@ class OfflineScreen extends Component {
     if (this.state.isConnected) {
       return (
         <View style={styles.container}>
+          <Text>offline </Text>
           <Modal
             transparent={false}
             animationType={"slide"}
             visible={this.state.ModalVisibleStatus}
-            onRequestClose={() => { this.ShowModalFunction(!this.state.ModalVisibleStatus) }} >
+            onRequestClose={() => { }} >
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <View style={styles.ModalInsideView}>
                 <Text style={styles.TextStyle}>Online Would you like to continue, with internet </Text>
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'gray'
+    backgroundColor: 'white'
   },
   text: {
     color: 'black',
