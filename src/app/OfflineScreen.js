@@ -6,8 +6,8 @@ class OfflineScreen extends Component {
     constructor(){
         super()
         this.state = {
-            ModalVisibleStatus: false,name: '',
-            email: '',
+            ModalVisibleStatus: true,name: '',
+            email: '',isConnected: true
           }
     }
     ShowModalFunction(visible) {
@@ -17,9 +17,23 @@ class OfflineScreen extends Component {
         this.props.navigation.navigate('OnlineScreen');
         this.setState({ModalVisibleStatus:false})
     } 
-    componentDidMount(){
-          this.getValueFromStorage();
+
+    componentDidMount() {
+      this.getValueFromStorage();
+      NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     }
+  
+    componentWillUnmount() {
+      NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    }
+
+    handleConnectivityChange = isConnected => {
+      if (isConnected) {
+        this.setState({ isConnected });
+      } else {
+        this.setState({ isConnected });
+      }
+    };
       setName = value => {
         this.setState({ name: value });
       };
@@ -36,13 +50,6 @@ class OfflineScreen extends Component {
         });
       };
       saveText = () => {
-        NetInfo.isConnected.fetch().then(isConnected => {
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
-            if(isConnected != true)
-            {
-                this.ShowModalFunction(true);
-            }
-            else {
                 const value1 = this.state.name;
                 const value2 = this.state.email;
                 let keys = [['name', value1], ['email', value2]];
@@ -53,8 +60,6 @@ class OfflineScreen extends Component {
                     email: value2,
                 });
             });
-            }
-          });  
       };
     
       clearText = () => {
@@ -64,47 +69,57 @@ class OfflineScreen extends Component {
         });
       };
     render(){
-        return(
-     <View style={styles.container}>
-                <Modal
-                    transparent={false}
-                    animationType={"slide"}
-                    visible={this.state.ModalVisibleStatus}
-                    onRequestClose={ () => { this.ShowModalFunction(!this.state.ModalVisibleStatus)} } >
-                    <View style={{ flex:1, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={styles.ModalInsideView}>
-                        <Text style={styles.TextStyle}>Offline Would you like to continue, with out internet </Text>
-                        <TouchableOpacity style={styles.button} onPress={this.navigate}>
-                            <Text style={styles.text}>
-                                Click here for Offline
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                </Modal>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Enter Name"
-                    text="bndsbbsdn"
-                    onChangeText={this.setName}
-                    />
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Enter Email"
-                    onChangeText={this.setEmail}
-                    />
-                <Text>
-                    Name: {this.state.name}
-                </Text>
-                <Text>
-                    Email: {this.state.email}
-                </Text>
-                <View style={{ flex: 1, flexDirection: 'row', marginTop: 50, }}>
-                <Button title="Clear" color="#841584" onPress={this.clearText} />
-                <Button title="Save" color="#841584" onPress={this.saveText} />
+          if (this.state.isConnected){
+            debugger;
+            return(
+            <View style={styles.container}>
+             <TextInput
+                 style={styles.textInput}
+                 placeholder="Enter Name"
+                 text="bndsbbsdn"
+                 onChangeText={this.setName}
+                 />
+             <TextInput
+                 style={styles.textInput}
+                 placeholder="Enter Email"
+                 onChangeText={this.setEmail}
+                 />
+             <Text>
+                 Name: {this.state.name}
+             </Text>
+             <Text>
+                 Email: {this.state.email}
+             </Text>
+             <View style={{ flex: 1, flexDirection: 'row', marginTop: 50, }}>
+             <Button title="Clear" color="#841584" onPress={this.clearText} />
+             <Button title="Save" color="#841584" onPress={this.saveText} />
+             </View>
+        </View>
+            )
+          }
+          else {
+            debugger;
+            return(
+              <View style={styles.container}>
+              <Modal
+              transparent={false}
+              animationType={"slide"}
+              visible={this.state.ModalVisibleStatus}
+              onRequestClose={ () => { this.ShowModalFunction(!this.state.ModalVisibleStatus)} } >
+                <View style={{ flex:1, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={styles.ModalInsideView}>
+                    <Text style={styles.TextStyle}>Offline Would you like to continue, with out internet </Text>
+                    <TouchableOpacity style={styles.button} onPress={this.navigate}>
+                        <Text style={styles.text}>
+                            Click here for Offline
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-     </View>
-        )
+                </View>
+            </Modal>
+          </View>
+            )
+          }
     }
 }
 const styles = StyleSheet.create({
